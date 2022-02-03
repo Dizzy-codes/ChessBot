@@ -1,10 +1,7 @@
+from logging import error
 from operator import indexOf
-from aiohttp import BytesIOPayload
-
-from matplotlib.cbook import index_of
 import itertools
 from itertools import chain
-from  more_itertools import unique_everseen
 import chess
 import chess.svg
 import shelve
@@ -12,7 +9,6 @@ import random
 import sys
 import collections
 from collections import Counter
-from IPython.display import SVG
 from table import *
 
 def evaluate_board():
@@ -33,7 +29,7 @@ def evaluate_board():
         chess.KNIGHT: 320,
         chess.BISHOP: 330,
         chess.QUEEN: 900,
-        chess.KING: 20000
+        chess.KING: 200000000
     }
 
     #Stores the index of the move(ie: e2)
@@ -53,9 +49,14 @@ def evaluate_board():
     while BOARD.is_checkmate() == False and BOARD.is_stalemate() == False and BOARD.is_insufficient_material() == False and BOARD.can_claim_draw() == False:
         #Changes White's value based on the response
         if player_color == "W":
-            WHITE = True
-            player_move = input("Enter you move (Example: e2e4 would be = to Pe4) ")
-            BOARD.push_san(player_move)
+            try:
+                WHITE = True
+                player_move = input("Enter you move (Example: e2e4 would be = to Pe4) ")
+                BOARD.push_san(player_move)
+                BOARD_REPLICA.push_san(player_move)
+            except error as E:
+                   print(f"Error:{E}") 
+
         else:
             WHITE = False
 
@@ -75,7 +76,6 @@ def evaluate_board():
             BOARD.push_san(player_move)
             BOARD_REPLICA.push_san(player_move)
             print(f"Last move made was {str(BOARD.peek())}")
-            print(BOARD.attackers(chess.parse_square(player_move)[:-2]))
             print(BOARD)
             print(" ")
 
@@ -87,11 +87,6 @@ def evaluate_board():
 
         #For every legal move, get the value of its destination square
         for key, value in CHESS_SQUARE_INDEX.items():
-            
-            #FOR THE TEST BOARD
-            if WHITE == True and moved == 0:
-                BOARD_REPLICA.push_san(player_move)
-                moved += 1
 
             #We need to push the move so that the engine can find the piece
             BOARD_REPLICA.push_san(key)
@@ -99,17 +94,35 @@ def evaluate_board():
             #Look for the piece and using the index from the dict; use the table that matches the piece NOTE: List is reversed for black
             #NOTE: P- Pawn, N- Knight, B- Bishop, Q- Queen, K- King  
             if str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "P":
-                CHESS_SQUARE_VALUE[key] = pawntable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = pawntable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = pawntable[-value]
             elif str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "R":
-                CHESS_SQUARE_VALUE[key] = rookstable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = rookstable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = rookstable[-value]
             elif str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "N":
-                CHESS_SQUARE_VALUE[key] = knightstable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = knightstable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = knightstable[-value]
             elif str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "B":
-                CHESS_SQUARE_VALUE[key] = bishopstable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = bishopstable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = bishopstable[-value]
             elif str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
-                CHESS_SQUARE_VALUE[key] = queenstable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = queenstable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = queenstable[-value]
             else:
-                CHESS_SQUARE_VALUE[key] = kingstable[value]
+                if WHITE == False:
+                    CHESS_SQUARE_VALUE[key] = kingstable[value]
+                else:
+                    CHESS_SQUARE_VALUE[key] = kingstable[-value]
 
             #Reset after each use
             BOARD_REPLICA.pop()
@@ -121,9 +134,8 @@ def evaluate_board():
         print(f"Last move made was {str(BOARD.peek())}")
         print(BOARD)
         print(" ")
-
-        #Value to determine if white made a move
-        moved = 0
+        print(CHESS_SQUARE_VALUE)
+        print(CHESS_SQUARE_INDEX)
 
         #Clears index and values to re populate
         CHESS_SQUARE_INDEX.clear()
@@ -132,32 +144,6 @@ def evaluate_board():
 
 
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #Checks to see if the main file is running, or a sub file
 if __name__ == '__main__':
