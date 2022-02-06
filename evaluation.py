@@ -270,26 +270,26 @@ def evaluate_board():
 
             #Check and append each move. NOTE: also checks if the square has attackers. For the queen we care about ANY attacker being there. Checks if other pieces can capture rooks or queens ect.
             if PLAYER_COLOR_WHITE == False:
-                if chess_piece == "P" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or chess_piece == "P" and str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "r" or chess_piece == "P" and str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q" or chess_piece == "P" and str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "n" or chess_piece == "P" and str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "b" or chess_piece == "P" and str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "p":
+                if chess_piece == "P" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) and str(BOARD.piece_at(chess.parse_square(key[-2:]))) != None:
                     CHESS_SQUARE_VALUE[key] = pawntable[value]
-                elif chess_piece == "R" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
+                elif chess_piece == "R" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
                     CHESS_SQUARE_VALUE[key] = rookstable[value]
-                elif chess_piece == "N" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
+                elif chess_piece == "N" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
                     CHESS_SQUARE_VALUE[key] = knightstable[value]
-                elif chess_piece == "B" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
+                elif chess_piece == "B" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
                     CHESS_SQUARE_VALUE[key] = bishopstable[value]
                 elif chess_piece == "Q" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
                     CHESS_SQUARE_VALUE[key] = queenstable[value]
                 elif chess_piece == "K":
                     CHESS_SQUARE_VALUE[key] = kingstable[value]
             else:
-                if chess_piece == "p" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "N" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "B" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "P":
+                if chess_piece == "p" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) and str(BOARD.piece_at(chess.parse_square(key[-2:]))) != None:
                     CHESS_SQUARE_VALUE[key] = pawntable[value]
-                elif chess_piece == "r" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
+                elif chess_piece == "r" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
                     CHESS_SQUARE_VALUE[key] = rookstable[value]
-                elif chess_piece == "n" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
+                elif chess_piece == "n" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
                     CHESS_SQUARE_VALUE[key] = knightstable[value]
-                elif chess_piece == "b" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
+                elif chess_piece == "b" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
                     CHESS_SQUARE_VALUE[key] = bishopstable[value]
                 elif chess_piece == "q" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
                     CHESS_SQUARE_VALUE[key] = queenstable[value]
