@@ -47,6 +47,9 @@ def evaluate_board():
     #Holds the current chess piece
     CURRENT_SQUARE_PIECE = []
 
+    #Stores the current attackers
+    ATTACKERS = []
+
     #Contains first moves for the bot
     FIRST_MOVES = ["e2e4"]
 
@@ -270,6 +273,21 @@ def evaluate_board():
 
             #Check and append each move. NOTE: also checks if the square has attackers. For the queen we care about ANY attacker being there. Checks if other pieces can capture rooks or queens ect.
             if PLAYER_COLOR_WHITE == False:
+                #Checks if a piece is being attacked an appends the value of the attack piece
+                for value in BOARD.attackers(chess.BLACK, chess.parse_square((key[:2]))):
+                    ATTACKERS.append(value)
+                if BOARD.is_attacked_by(chess.BLACK, chess.parse_square(key[:2])) == True and len(ATTACKERS) >= 1:
+                    if chess_piece == "P" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.PAWN]
+                    elif chess_piece == "R" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.ROOK]
+                    elif chess_piece == "N" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.KNIGHT]
+                    elif chess_piece == "B" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.BISHOP]
+                    elif chess_piece == "Q" and BOARD_REPLICA.is_attacked_by(chess.BLACK, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.QUEEN]
+
                 if chess_piece == "P" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) and str(BOARD.piece_at(chess.parse_square(key[-2:]))) != None:
                     CHESS_SQUARE_VALUE[key] = pawntable[value]
                 elif chess_piece == "R" and len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "r" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "q":
@@ -283,6 +301,20 @@ def evaluate_board():
                 elif chess_piece == "K":
                     CHESS_SQUARE_VALUE[key] = kingstable[value]
             else:
+                #Checks if a piece is being attacked an appends the value of the attack piece
+                for value in BOARD.attackers(chess.WHITE, chess.parse_square((key[:2]))):
+                    ATTACKERS.append(value)
+                if BOARD.is_attacked_by(chess.WHITE, chess.parse_square(key[:2])) == True and len(ATTACKERS) >= 1:
+                    if chess_piece == "p" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.PAWN]
+                    elif chess_piece == "r" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.ROOK]
+                    elif chess_piece == "n" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.KNIGHT]
+                    elif chess_piece == "b" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.BISHOP]
+                    elif chess_piece == "q" and BOARD_REPLICA.is_attacked_by(chess.WHITE, chess.parse_square(key[-2:])) == False:
+                        CHESS_SQUARE_VALUE[key] = CHESS_PIECE_VALUES[chess.QUEEN]
                 if chess_piece == "p" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) and str(BOARD.piece_at(chess.parse_square(key[-2:]))) != None:
                     CHESS_SQUARE_VALUE[key] = pawntable[value]
                 elif chess_piece == "r" and len(BOARD_REPLICA.attackers(chess.BLACK, chess.parse_square(key[-2:]))) > len(BOARD_REPLICA.attackers(chess.WHITE, chess.parse_square(key[-2:]))) or str(BOARD.piece_at(chess.parse_square(key[-2:]))) == "R" or str(BOARD_REPLICA.piece_at(chess.parse_square(key[-2:]))) == "Q":
@@ -298,6 +330,7 @@ def evaluate_board():
 
             #Reset after each use
             BOARD_REPLICA.pop()
+            ATTACKERS.clear()
         #Sort the list from greatest value, to least and select the highest value
         BOARD.push_san(sorted(CHESS_SQUARE_VALUE, key=CHESS_SQUARE_VALUE.get, reverse=True)[0])
 
